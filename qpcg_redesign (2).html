@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>QPCG — Queen's Private Capital Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --maroon: #3D1515;
+    --maroon-dark: #260e0e;
+    --gold: #C4A882;
+    --gold-light: #e5d3b8;
+    --cream: #F7F3EE;
+    --offwhite: #FAFAF8;
+    --text: #1a1a1a;
+    --muted: #717171;
+    --light: #a0a0a0;
+    --border: rgba(0,0,0,0.07);
+    --serif: 'Libre Baskerville', Georgia, serif;
+    --sans: 'Montserrat', Helvetica, Arial, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: #fff; color: var(--text); overflow-x: hidden; font-weight: 400; }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.75s ease, transform 0.75s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+  .d1 { transition-delay: 0.08s; } .d2 { transition-delay: 0.18s; } .d3 { transition-delay: 0.28s; } .d4 { transition-delay: 0.38s; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 62px;
+    background: var(--maroon);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-logo img { height: 28px; filter: brightness(0) invert(1); display: block; }
+  .nav-links { display: flex; align-items: center; }
+  .nav-links a {
+    font-family: var(--sans); font-weight: 500; font-size: 12px;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: rgba(255,255,255,0.62); text-decoration: none;
+    padding: 0 15px; height: 62px; display: flex; align-items: center;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-links a:hover { color: #fff; border-bottom-color: var(--gold); }
+  .nav-contact {
+    border: 1px solid rgba(255,255,255,0.22) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.22) !important;
+    color: rgba(255,255,255,0.8) !important;
+    padding: 7px 18px !important; height: auto !important;
+    border-radius: 3px; margin-left: 10px;
+  }
+  .nav-contact:hover { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
+
+  /* HERO */
+  .hero { position: relative; height: 100vh; min-height: 620px; display: flex; flex-direction: column; overflow: hidden; }
+  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 28%; transform: scale(1.05); animation: zoomOut 9s ease forwards; }
+  @keyframes zoomOut { to { transform: scale(1); } }
+  .hero-grad { position: absolute; inset: 0; background: linear-gradient(165deg, rgba(22,6,6,0.91) 0%, rgba(50,14,14,0.65) 55%, rgba(12,5,5,0.88) 100%); }
+  .hero-inner { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; flex: 1; padding: 0 3.5rem 0; animation: fadeUp 1s ease 0.25s both; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(26px); } to { opacity:1; transform:none; } }
+
+  .hero-kicker { font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+  .hero-h1 { font-family: var(--serif); font-size: clamp(36px, 5.2vw, 68px); font-weight: 400; color: #fff; line-height: 1.08; letter-spacing: -0.01em; margin-bottom: 1.5rem; max-width: 720px; }
+  .hero-h1 em { font-style: italic; color: var(--gold-light); }
+  .hero-sub { font-family: var(--sans); font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.52); line-height: 1.9; max-width: 500px; margin-bottom: 2.75rem; }
+  .hero-cta { display: inline-block; font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--maroon-dark); background: var(--gold); padding: 13px 28px; border-radius: 2px; text-decoration: none; margin-bottom: 0; transition: background 0.15s; }
+  .hero-cta:hover { background: var(--gold-light); }
+
+  /* STATS */
+  .stats-bar { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(255,255,255,0.09); margin-top: 4.5rem; }
+  .stat { padding: 1.75rem 3.5rem; border-right: 1px solid rgba(255,255,255,0.07); }
+  .stat:last-child { border-right: none; }
+  .stat-val { font-family: var(--serif); font-size: 38px; font-weight: 400; color: #fff; line-height: 1; }
+  .stat-val sup { font-size: 18px; color: var(--gold); vertical-align: super; }
+  .stat-val sub { font-size: 20px; color: var(--gold); vertical-align: baseline; }
+  .stat-lbl { font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-top: 7px; }
+
+  /* MARQUEE */
+  .marquee-wrap { background: var(--cream); border-bottom: 1px solid var(--border); overflow: hidden; padding: 2.25rem 0; }
+  .marquee-kicker { font-family: var(--sans); font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light); text-align: center; margin-bottom: 1.75rem; }
+  .marquee-track { display: flex; width: max-content; animation: slide 30s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+  .logo-slot { display: flex; align-items: center; justify-content: center; padding: 0 3rem; height: 44px; border-right: 1px solid var(--border); flex-shrink: 0; }
+  .logo-slot img { height: 22px; max-width: 110px; object-fit: contain; filter: grayscale(1) opacity(0.45); transition: filter 0.25s; }
+  .logo-slot:hover img { filter: grayscale(0) opacity(1); }
+
+  /* ABOUT SPLIT — asymmetric */
+  .about { display: grid; grid-template-columns: 55% 45%; min-height: 580px; }
+  .about-img { position: relative; overflow: hidden; }
+  .about-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transition: transform 7s ease; }
+  .about:hover .about-img img { transform: scale(1.04); }
+  .about-img-overlay { position: absolute; inset: 0; background: rgba(26,8,8,0.18); }
+  .about-content { background: var(--maroon); padding: 5rem 4rem 5rem 4.5rem; display: flex; flex-direction: column; justify-content: center; }
+  .section-kicker { font-family: var(--sans); font-size: 9px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem; }
+  .about-content h2 { font-family: var(--serif); font-size: clamp(24px, 2.8vw, 36px); font-weight: 400; color: #fff; line-height: 1.25; margin-bottom: 1.75rem; }
+  .about-content p { font-family: var(--sans); font-size: 13.5px; font-weight: 300; color: rgba(255,255,255,0.58); line-height: 1.9; margin-bottom: 1rem; }
+  .about-content p:last-of-type { margin-bottom: 2rem; }
+  .btn-ghost { display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(196,168,130,0.4); padding: 10px 22px; border-radius: 2px; text-decoration: none; transition: all 0.15s; }
+  .btn-ghost:hover { background: rgba(196,168,130,0.1); border-color: var(--gold); }
+
+  /* SERVICES */
+  .services { padding: 6rem 3.5rem; background: var(--offwhite); }
+  .services-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3.5rem; gap: 3rem; }
+  .services-head h2 { font-family: var(--serif); font-size: clamp(26px, 3vw, 40px); font-weight: 400; line-height: 1.2; max-width: 360px; }
+  .services-head p { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.85; max-width: 380px; }
+  .services-grid { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .svc { background: #fff; padding: 2.5rem 2.25rem; border-right: 1px solid var(--border); transition: background 0.2s; position: relative; }
+  .svc:last-child { border-right: none; }
+  .svc:hover { background: #fdf9f5; }
+  .svc-n { font-family: var(--serif); font-size: 48px; font-weight: 400; color: rgba(61,21,21,0.07); line-height: 1; margin-bottom: 1.5rem; }
+  .svc-title { font-family: var(--serif); font-size: 18px; font-weight: 400; color: var(--maroon); margin-bottom: 0.85rem; }
+  .svc-body { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.8; }
+  .svc-link { display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--maroon); text-decoration: none; margin-top: 1.5rem; }
+  .svc-link::after { content: ' →'; }
+
+  /* INSIGHTS */
+  .insights { padding: 6rem 3.5rem; }
+  .insights-head { margin-bottom: 3rem; }
+  .insights-head h2 { font-family: var(--serif); font-size: clamp(24px, 3vw, 38px); font-weight: 400; margin-top: 0.75rem; }
+  .insights-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 20px; }
+  .insight { border-radius: 3px; overflow: hidden; border: 1px solid var(--border); background: #fff; transition: transform 0.25s; cursor: pointer; }
+  .insight:hover { transform: translateY(-5px); }
+  .insight-img { overflow: hidden; }
+  .insight-img img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform 0.5s ease; }
+  .insights-grid .insight:first-child .insight-img img { height: 240px; }
+  .insight:hover .insight-img img { transform: scale(1.04); }
+  .insight-body { padding: 1.5rem 1.5rem 1.75rem; }
+  .insight-tag { font-family: var(--sans); font-size: 9px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem; }
+  .insight-title { font-family: var(--serif); font-size: 15px; font-weight: 400; line-height: 1.5; color: var(--text); margin-bottom: 1rem; }
+  .insight-read { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--maroon); text-decoration: none; }
+  .insight-read::after { content: ' →'; }
+
+  /* EXPLORE — editorial grid, not perfectly even */
+  .explore { padding: 6rem 3.5rem; background: var(--cream); }
+  .explore-head { margin-bottom: 3rem; }
+  .explore-head h2 { font-family: var(--serif); font-size: clamp(24px, 3vw, 38px); font-weight: 400; margin-top: 0.75rem; }
+  .explore-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto; gap: 14px; }
+  .exp-card { border-radius: 3px; overflow: hidden; position: relative; cursor: pointer; }
+  .exp-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.55s ease; }
+  .exp-card:hover img { transform: scale(1.06); }
+  .exp-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(18,5,5,0.93) 0%, rgba(18,5,5,0.25) 55%, rgba(18,5,5,0.0) 100%); transition: background 0.3s; }
+  .exp-card:hover .exp-overlay { background: linear-gradient(to top, rgba(18,5,5,0.98) 0%, rgba(18,5,5,0.45) 65%, rgba(18,5,5,0.05) 100%); }
+  .exp-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem 1.75rem; }
+  .exp-tag { font-family: var(--sans); font-size: 9px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .exp-title { font-family: var(--serif); font-size: 17px; font-weight: 400; color: #fff; line-height: 1.3; }
+  .exp-desc { font-family: var(--sans); font-size: 12px; font-weight: 300; color: rgba(255,255,255,0); line-height: 1.65; margin-top: 6px; transition: color 0.25s; }
+  .exp-card:hover .exp-desc { color: rgba(255,255,255,0.62); }
+  .exp-tall { grid-row: span 2; }
+  .exp-tall img { height: 100%; min-height: 440px; }
+  .exp-short img { height: 210px; }
+
+  /* CLIENTS DETAIL */
+  .clients-detail { padding: 5.5rem 3.5rem; border-top: 1px solid var(--border); }
+  .clients-detail-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; }
+  .clients-detail-head h2 { font-family: var(--serif); font-size: clamp(22px, 2.8vw, 34px); font-weight: 400; }
+  .clients-detail-head p { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.8; max-width: 360px; }
+  .client-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .client-cell { background: #fff; padding: 1.75rem 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; transition: background 0.2s; cursor: default; }
+  .client-cell:hover { background: var(--cream); }
+  .client-cell img { height: 22px; max-width: 100px; object-fit: contain; filter: grayscale(1) opacity(0.5); transition: filter 0.25s; }
+  .client-cell:hover img { filter: grayscale(0) opacity(1); }
+  .client-cell span { font-family: var(--sans); font-size: 10px; font-weight: 500; color: var(--light); text-align: center; letter-spacing: 0.04em; }
+  .client-cell:hover span { color: var(--muted); }
+
+  /* FOOTER */
+  footer { background: var(--maroon-dark); padding: 4.5rem 3.5rem 2rem; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3.5rem; padding-bottom: 3.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .footer-brand img { height: 28px; filter: brightness(0) invert(1); opacity: 0.65; display: block; margin-bottom: 1.25rem; }
+  .footer-brand p { font-family: var(--sans); font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.3); line-height: 1.8; max-width: 220px; }
+  .footer-social { display: flex; gap: 8px; margin-top: 1.5rem; }
+  .fsoc { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.35); text-decoration: none; transition: all 0.15s; }
+  .fsoc:hover { border-color: var(--gold); color: var(--gold); }
+  .footer-col-title { font-family: var(--sans); font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem; }
+  .footer-col a { display: block; font-family: var(--sans); font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.38); text-decoration: none; margin-bottom: 10px; transition: color 0.15s; }
+  .footer-col a:hover { color: rgba(255,255,255,0.8); }
+  .footer-bottom { padding-top: 1.75rem; display: flex; justify-content: space-between; }
+  .footer-copy { font-family: var(--sans); font-size: 11px; font-weight: 300; color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <a href="#"><img src="https://qpcg.ca/wp-content/uploads/2023/04/QPCG-Logo-e1682049712669-768x216.png" alt="QPCG"/></a>
+  </div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#about">About</a>
+    <a href="#insights">Insights</a>
+    <a href="#services">Services</a>
+    <a href="#explore">Team</a>
+    <a href="#">Alumni</a>
+    <a href="#">Events</a>
+    <a href="#" class="nav-contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-img" src="https://qpcg.ca/wp-content/uploads/2022/10/goodes-exterior-towerSign-1.jpg" alt="Queen's campus"/>
+  <div class="hero-grad"></div>
+  <div class="hero-inner">
+    <div class="hero-kicker">Queen's Private Capital Group</div>
+    <h1 class="hero-h1">Canada's premier<br>student-run <em>financial</em><br>advisory service.</h1>
+    <p class="hero-sub">We've offered guidance to leading private capital firms across Canada and the United States, helping them navigate key investment questions and portfolio management concerns.</p>
+    <a href="#services" class="hero-cta">Find out more</a>
+  </div>
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-val"><sup>$</sup><span class="cu" data-to="235" data-suffix="">0</span><sub>B</sub></div>
+      <div class="stat-lbl">Client AUM</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val"><span class="cu" data-to="75" data-suffix="">0</span></div>
+      <div class="stat-lbl">Projects completed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val"><span class="cu" data-to="40" data-suffix="">0</span></div>
+      <div class="stat-lbl">Team members</div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGO MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-kicker">Our clients</div>
+  <div style="overflow:hidden;">
+    <div class="marquee-track">
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/08/BC_Partners_logo.svg-1024x661.png" alt="BC Partners"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/12/Onex_Corporation.svg-1024x188.png" alt="Onex"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/07/Altas.png" alt="Altas Partners"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Axa-Ventures.png" alt="AXA Ventures"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2021/09/omers-logo-1024x227.png" alt="OMERS"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/10/BDC.png" alt="BDC"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Candle_Logo_Alpha_07-1.png" alt="Candle Media"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/12/Gencap.png" alt="Generation Capital"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/07/Peloton.png" alt="Peloton Capital"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Round13_logo_dark.svg" alt="Round13"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/08/BC_Partners_logo.svg-1024x661.png" alt="BC Partners"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/12/Onex_Corporation.svg-1024x188.png" alt="Onex"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/07/Altas.png" alt="Altas Partners"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Axa-Ventures.png" alt="AXA Ventures"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2021/09/omers-logo-1024x227.png" alt="OMERS"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/10/BDC.png" alt="BDC"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Candle_Logo_Alpha_07-1.png" alt="Candle Media"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/12/Gencap.png" alt="Generation Capital"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2022/07/Peloton.png" alt="Peloton Capital"/></div>
+      <div class="logo-slot"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Round13_logo_dark.svg" alt="Round13"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="about" id="about">
+  <div class="about-img">
+    <img src="https://qpcg.ca/wp-content/uploads/2022/10/Building-Beside-Grant.jpeg" alt="Smith School of Business"/>
+    <div class="about-img-overlay"></div>
+  </div>
+  <div class="about-content">
+    <div class="reveal">
+      <div class="section-kicker">About QPCG</div>
+      <h2>Founded in 2015 to push the boundaries of what a student-led organization can achieve</h2>
+      <p>The Queen's Private Capital Group is a student-run organization that provides financial advisory services to private equity and venture capital firms across North America.</p>
+      <p>We strive to be recognized by students and finance professionals across Canada as the top extracurricular opportunity for those interested in private markets.</p>
+      <a href="#" class="btn-ghost">Learn more</a>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="services" id="services">
+  <div class="services-head">
+    <div class="reveal">
+      <div class="section-kicker">What we do</div>
+      <h2>Our advisory services</h2>
+    </div>
+    <p class="reveal d2">QPCG works with private equity, credit, and venture capital firms on semester-long engagements. We primarily assist with market research, transaction advisory, and valuation services.</p>
+  </div>
+  <div class="services-grid">
+    <div class="svc reveal">
+      <div class="svc-n">01</div>
+      <div class="svc-title">Market research</div>
+      <div class="svc-body">In-depth industry analysis and competitive landscape research to support portfolio decisions and new investment theses.</div>
+      <a class="svc-link" href="#">Our work</a>
+    </div>
+    <div class="svc reveal d2">
+      <div class="svc-n">02</div>
+      <div class="svc-title">Transaction advisory</div>
+      <div class="svc-body">Due diligence support and transaction analysis across private equity, venture capital, and private credit mandates.</div>
+      <a class="svc-link" href="#">Our work</a>
+    </div>
+    <div class="svc reveal d3">
+      <div class="svc-n">03</div>
+      <div class="svc-title">Valuation services</div>
+      <div class="svc-body">Rigorous financial modelling and company valuation across industries, deal types, and geographies.</div>
+      <a class="svc-link" href="#">Our work</a>
+    </div>
+  </div>
+</div>
+
+<!-- INSIGHTS -->
+<div class="insights" id="insights">
+  <div class="insights-head reveal">
+    <div class="section-kicker">Insights</div>
+    <h2>Latest research &amp; publications</h2>
+  </div>
+  <div class="insights-grid">
+    <div class="insight reveal d1">
+      <div class="insight-img"><img src="https://qpcg.ca/wp-content/uploads/2025/07/Screen-Shot-2025-10-15-at-12.18.53-AM-1024x546.png" alt="Annual Report 2025"/></div>
+      <div class="insight-body">
+        <div class="insight-tag">Annual report</div>
+        <div class="insight-title">2024–2025 Annual Report</div>
+        <a href="https://qpcg.ca/2024-2025-annual-report/" class="insight-read">Read more</a>
+      </div>
+    </div>
+    <div class="insight reveal d2">
+      <div class="insight-img"><img src="https://qpcg.ca/wp-content/uploads/2024/02/Feature-Image-1-1024x422.png" alt="Annual Report 2023"/></div>
+      <div class="insight-body">
+        <div class="insight-tag">Annual report</div>
+        <div class="insight-title">2022–2023 Annual Report</div>
+        <a href="https://qpcg.ca/2022-2023-annual-report/" class="insight-read">Read more</a>
+      </div>
+    </div>
+    <div class="insight reveal d3">
+      <div class="insight-img"><img src="https://qpcg.ca/wp-content/uploads/2024/01/NCR_World_Headquarters_Midtown_Georgia-683x1024.jpg" alt="NCR Voyix"/></div>
+      <div class="insight-body">
+        <div class="insight-tag">Deep dive</div>
+        <div class="insight-title">Examining NCR Voyix, Technology Solutions Provider</div>
+        <a href="https://qpcg.ca/examining-ncr-voyix-technology-solutions-provider/" class="insight-read">Read more</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPLORE -->
+<div class="explore" id="explore">
+  <div class="explore-head reveal">
+    <div class="section-kicker">Explore QPCG</div>
+    <h2>Get to know us</h2>
+  </div>
+  <div class="explore-grid">
+    <div class="exp-card exp-tall reveal d1">
+      <img src="https://qpcg.ca/wp-content/uploads/2025/10/DSC_0004-768x512.jpeg" alt="Our team"/>
+      <div class="exp-overlay"></div>
+      <div class="exp-body">
+        <div class="exp-tag">Team</div>
+        <div class="exp-title">Our team</div>
+        <div class="exp-desc">Highly motivated Smith Commerce students with professional experience and rigorous training.</div>
+      </div>
+    </div>
+    <div class="exp-card exp-short reveal d2">
+      <img src="https://qpcg.ca/wp-content/uploads/2024/03/QPCG-Fall-2022-Alumni_Social-1024x768.jpeg" alt="Alumni"/>
+      <div class="exp-overlay"></div>
+      <div class="exp-body">
+        <div class="exp-tag">Alumni</div>
+        <div class="exp-title">Alumni network</div>
+        <div class="exp-desc">An incredible resource for members navigating their career trajectory in finance.</div>
+      </div>
+    </div>
+    <div class="exp-card exp-short reveal d3">
+      <img src="https://qpcg.ca/wp-content/uploads/2025/10/566477615_686297310692535_8300215988329467439_n-1024x768.jpg" alt="Events"/>
+      <div class="exp-overlay"></div>
+      <div class="exp-body">
+        <div class="exp-tag">Events</div>
+        <div class="exp-title">Events</div>
+        <div class="exp-desc">Public panels, conventions, and networking for students interested in private markets.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENTS DETAIL -->
+<div class="clients-detail">
+  <div class="clients-detail-head reveal">
+    <div>
+      <div class="section-kicker">Our clients</div>
+      <h2>Who we work with</h2>
+    </div>
+    <p>QPCG works with private equity, credit, and venture capital firms on semester-long projects. We primarily assist with market research, transaction advisory, and valuation services.</p>
+  </div>
+  <div class="client-grid reveal">
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2022/08/BC_Partners_logo.svg-1024x661.png" alt="BC Partners"/><span>BC Partners</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2022/12/Onex_Corporation.svg-1024x188.png" alt="Onex"/><span>Onex Partners</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2022/07/Altas.png" alt="Altas"/><span>Altas Partners</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Axa-Ventures.png" alt="AXA"/><span>AXA Ventures</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2021/09/omers-logo-1024x227.png" alt="OMERS"/><span>OMERS Ventures</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2022/10/BDC.png" alt="BDC"/><span>BDC Capital</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Candle_Logo_Alpha_07-1.png" alt="Candle"/><span>Candle Media</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2022/12/Gencap.png" alt="Gencap"/><span>Generation Capital</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2022/07/Peloton.png" alt="Peloton"/><span>Peloton Capital</span></div>
+    <div class="client-cell"><img src="https://qpcg.ca/wp-content/uploads/2023/10/Round13_logo_dark.svg" alt="Round13"/><span>Round13</span></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="https://qpcg.ca/wp-content/uploads/2023/04/QPCG-Logo-e1682049712669-768x216.png" alt="QPCG"/>
+      <p>Canada's premier student-run financial advisory service, based at Smith School of Business, Queen's University.</p>
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/queen's-private-capital-group/" class="fsoc">in</a>
+        <a href="https://www.facebook.com/qprivatecapital" class="fsoc">f</a>
+        <a href="https://www.instagram.com/queensprivatecapital/" class="fsoc">ig</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Services</div>
+      <a href="#">Market research</a>
+      <a href="#">Transaction advisory</a>
+      <a href="#">Valuation</a>
+      <a href="#">Client login</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Organization</div>
+      <a href="#">About</a>
+      <a href="#">Team</a>
+      <a href="#">Alumni</a>
+      <a href="#">Insights</a>
+      <a href="#">Events</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <a href="#">Get in touch</a>
+      <a href="#">Hiring info</a>
+      <a href="#">Client inquiries</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Queen's Private Capital Group</div>
+    <div class="footer-copy">Smith School of Business · Queen's University</div>
+  </div>
+</footer>
+
+<script>
+  // COUNT UP
+  const counters = document.querySelectorAll('.cu');
+  let fired = false;
+  const statsBar = document.querySelector('.stats-bar');
+  new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !fired) {
+      fired = true;
+      counters.forEach(el => {
+        const end = parseInt(el.dataset.to);
+        const dur = 1600;
+        const t0 = performance.now();
+        const step = now => {
+          const p = Math.min((now - t0) / dur, 1);
+          const e = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(e * end);
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }
+  }, { threshold: 0.6 }).observe(statsBar);
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => ro.observe(el));
+</script>
+</body>
+</html>
